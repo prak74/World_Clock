@@ -14,7 +14,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-    data = (ModalRoute.of(context)!.settings.arguments) as Map;
+    data = data.isEmpty ? (ModalRoute.of(context)!.settings.arguments) as Map : data;
 
     String location = data['location'];
     String time = data['time'];
@@ -37,7 +37,16 @@ class _HomeState extends State<Home> {
             child:  Column(
               children: [
                 ElevatedButton.icon(
-                    onPressed: (){Navigator.pushNamed(context, '/location');},
+                    onPressed: () async{
+                      dynamic result = await Navigator.pushNamed(context, '/location');
+                      print(result);
+                      setState(() {
+                        data['location'] = result['location'];
+                        data['time'] = result['time'];
+                        data['flag'] = result['flag'];
+                        data['isDayTime'] = result['isDayTime'];
+                      });
+                    },
                     icon: Icon(
                       Icons.edit_location,
                     ),
